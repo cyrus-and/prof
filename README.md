@@ -15,8 +15,10 @@ Please be aware that Prof uses `__attribute__((constructor))` to be as more
 straightforward to setup as possible, so it cannot be included more than
 once.
 
-Minimal example
----------------
+Examples
+--------
+
+### Minimal
 
 The following snippet prints the rough number of CPU clock cycles spent in
 executing the code between the two Prof calls:
@@ -29,6 +31,32 @@ int main()
     PROF_START();
     // slow code goes here...
     PROF_STDOUT();
+}
+```
+
+### Custom options
+
+The following snippet instead counts both read and write faults of the level
+1 data cache that occur in the userland code between the two Prof calls:
+
+```c
+#include <stdio.h>
+
+#define PROF_USER_EVENTS_ONLY
+#define PROF_EVENT_LIST \
+    PROF_EVENT_CACHE(L1D, READ, MISS) \
+    PROF_EVENT_CACHE(L1D, WRITE, MISS)
+#include "prof.h"
+
+int main()
+{
+    uint64_t faults[2];
+
+    PROF_START();
+    // slow code goes here...
+    PROF_DO(faults[index] = counter);
+
+    printf("L1 faults: R = %lu; W = %lu\n", faults[0], faults[1]);
 }
 ```
 
