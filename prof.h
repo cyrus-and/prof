@@ -72,10 +72,9 @@
 /*
  * Reset the counters and (re)start counting the events.
  *
- * The events to be monitored are hardware events from `perf_event_open`(2) and
- * are specified by setting the `PROF_EVENT_LIST` macro before including this
- * file to a comma separated list of `PERF_COUNT_HW_*` values; defaults to
- * `PERF_COUNT_HW_REF_CPU_CYCLES`.
+ * The events to be monitored are specified by setting the `PROF_EVENT_LIST`
+ * macro before including this file to a list of `PROF_EVENT` invocations;
+ * defaults to counting the number CPU clock cycles.
  *
  * If the `PROF_USER_EVENTS_ONLY` macro is defined before including this file
  * then kernel and hypervisor events are excluded from the count.
@@ -85,6 +84,13 @@
         PROF_IOCTL_(ENABLE);                                                   \
         PROF_IOCTL_(RESET);                                                    \
     } while (0)
+
+/*
+ * Specify an event to be monitored, `type` and `config` are defined in the
+ * documentation of the `perf_event_open` system call.
+ */
+#define PROF_EVENT(type, config)                                               \
+    (uint32_t)(type), (uint64_t)(config),
 
 /*
  * Stop counting the events and execute the code provided by `block` for each
@@ -143,7 +149,8 @@
 /* DEFAULTS ----------------------------------------------------------------- */
 
 #ifndef PROF_EVENT_LIST
-#define PROF_EVENT_LIST PERF_COUNT_HW_REF_CPU_CYCLES
+#define PROF_EVENT_LIST                                                        \
+    PROF_EVENT(PERF_TYPE_HARDWARE, PERF_COUNT_HW_REF_CPU_CYCLES)
 #endif
 
 /* UTILITY ------------------------------------------------------------------ */
@@ -180,21 +187,24 @@ static uint64_t prof_event_cnt_;
 static uint64_t *prof_event_buf_;
 
 static void prof_init_(uint64_t dummy, ...) {
-    uint64_t event;
+    uint32_t type;
     va_list ap;
 
     prof_fd_ = -1;
     prof_event_cnt_ = 0;
     va_start(ap, dummy);
-    while (event = va_arg(ap, uint64_t), event != -1UL) {
+    while (type = va_arg(ap, uint32_t), type != (uint32_t)-1) {
         struct perf_event_attr pe;
+        uint64_t config;
         int fd;
+
+        config = va_arg(ap, uint64_t);
 
         memset(&pe, 0, sizeof(struct perf_event_attr));
         pe.size = sizeof(struct perf_event_attr);
         pe.read_format = PERF_FORMAT_GROUP;
-        pe.type = PERF_TYPE_HARDWARE;
-        pe.config = event;
+        pe.type = type;
+        pe.config = config;
         #ifdef PROF_USER_EVENTS_ONLY
         pe.exclude_kernel = 1;
         pe.exclude_hv = 1;
@@ -216,7 +226,7 @@ static void prof_init_(uint64_t dummy, ...) {
 
 void __attribute__((constructor)) prof_init()
 {
-    prof_init_(-1UL, PROF_EVENT_LIST, -1UL);
+    prof_init_(0, PROF_EVENT_LIST /*,*/ (uint32_t)-1);
 }
 
 void __attribute__((destructor)) prof_fini()
