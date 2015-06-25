@@ -73,7 +73,7 @@
  * Reset the counters and (re)start counting the events.
  *
  * The events to be monitored are specified by setting the `PROF_EVENT_LIST`
- * macro before including this file to a list of `PROF_EVENT` invocations;
+ * macro before including this file to a list of `PROF_EVENT_*` invocations;
  * defaults to counting the number CPU clock cycles.
  *
  * If the `PROF_USER_EVENTS_ONLY` macro is defined before including this file
@@ -91,6 +91,33 @@
  */
 #define PROF_EVENT(type, config)                                               \
     (uint32_t)(type), (uint64_t)(config),
+
+/*
+ * Same as `PROF_EVENT` but for hardware events; prefix `PERF_COUNT_HW_` must be
+ * omitted from `config`.
+ */
+#define PROF_EVENT_HW(config)                                                  \
+    PROF_EVENT(PERF_TYPE_HARDWARE, PERF_COUNT_HW_ ## config)
+
+/*
+ * Same as `PROF_EVENT` but for software events; prefix `PERF_COUNT_SW_` must be
+ * omitted from `config`.
+ */
+#define PROF_EVENT_SW(config)                                                  \
+    PROF_EVENT(PERF_TYPE_SOFTWARE, PERF_COUNT_SW_ ## config)
+
+/*
+ * Same as `PROF_EVENT` but for cache events; prefixes `PERF_COUNT_HW_CACHE_`,
+ * `PERF_COUNT_HW_CACHE_OP_` and `PERF_COUNT_HW_CACHE_RESULT_` must be omitted
+ * from `cache`, `op` and `result`, respectively. Again `cache`, `op` and
+ * `result` are defined in the documentation of the `perf_event_open` system
+ * call.
+ */
+#define PROF_EVENT_CACHE(cache, op, result)                                    \
+    PROF_EVENT(PERF_TYPE_HW_CACHE,                                             \
+               (PERF_COUNT_HW_CACHE_ ## cache) |                               \
+               (PERF_COUNT_HW_CACHE_OP_ ## op << 8) |                          \
+               (PERF_COUNT_HW_CACHE_RESULT_ ## result << 16))
 
 /*
  * Stop counting the events and execute the code provided by `block` for each
