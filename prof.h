@@ -211,10 +211,10 @@
                            PERF_IOC_FLAG_GROUP) != -1);                        \
     } while (0)
 
-#define PROF_READ_COUNTERS_(counters)                                          \
+#define PROF_READ_COUNTERS_(buffer)                                            \
     do {                                                                       \
         const ssize_t to_read = sizeof(uint64_t) * (prof_event_cnt_ + 1);      \
-        PROF_ASSERT_(read(prof_fd_, counters, to_read) == to_read);            \
+        PROF_ASSERT_(read(prof_fd_, buffer, to_read) == to_read);              \
     } while (0)
 
 /* SETUP -------------------------------------------------------------------- */
