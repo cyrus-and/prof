@@ -103,12 +103,23 @@ from `cache`, `op` and `result`, respectively. Again `cache`, `op` and
 `result` are defined in the documentation of the `perf_event_open` system
 call.
 
+#### PROF_STOP()
+
+Stop counting the events. The counter array can then be accessed with
+`PROF_COUNTERS`.
+
+#### PROF_COUNTERS
+
+Access the counter array. The order of counters is the same of the events
+defined in `PROF_EVENT_LIST`. Elements of this array are 64 bit unsigned
+integers.
+
 #### PROF_DO(block)
 
 Stop counting the events and execute the code provided by `block` for each
-event. Within `code`: `index` refers to the event position index as defined
-in `PROF_EVENT_LIST` (starting from 0); `counter` is the actual value of the
-counter. Both `index` and `counter` are 64 bit unsigned integers.
+event. Within `code`: `index` refers to the event position index in the
+counter array defined by `PROF_COUNTERS`; `counter` is the actual value of
+the counter. `index` is a 64 bit unsigned integer.
 
 #### PROF_CALL(callback)
 

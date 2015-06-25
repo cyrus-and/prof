@@ -136,16 +136,33 @@
                (PERF_COUNT_HW_CACHE_RESULT_ ## result << 16))
 
 /*
+ * Stop counting the events. The counter array can then be accessed with
+ * `PROF_COUNTERS`.
+ */
+#define PROF_STOP()                                                            \
+    do {                                                                       \
+        PROF_IOCTL_(DISABLE);                                                  \
+        PROF_READ_COUNTERS_(prof_event_buf_);                                  \
+    } while (0)
+
+/*
+ * Access the counter array. The order of counters is the same of the events
+ * defined in `PROF_EVENT_LIST`. Elements of this array are 64 bit unsigned
+ * integers.
+ */
+#define PROF_COUNTERS                                                          \
+    (prof_event_buf_ + 1)
+
+/*
  * Stop counting the events and execute the code provided by `block` for each
- * event. Within `code`: `index` refers to the event position index as defined
- * in `PROF_EVENT_LIST` (starting from 0); `counter` is the actual value of the
- * counter. Both `index` and `counter` are 64 bit unsigned integers.
+ * event. Within `code`: `index` refers to the event position index in the
+ * counter array defined by `PROF_COUNTERS`; `counter` is the actual value of
+ * the counter. `index` is a 64 bit unsigned integer.
  */
 #define PROF_DO(block)                                                         \
     do {                                                                       \
         uint64_t i_;                                                           \
-        PROF_IOCTL_(DISABLE);                                                  \
-        PROF_READ_COUNTERS_(prof_event_buf_);                                  \
+        PROF_STOP();                                                           \
         for (i_ = 0; i_ < prof_event_cnt_; i_++) {                             \
             uint64_t index = i_;                                               \
             uint64_t counter = prof_event_buf_[i_ + 1];                        \
