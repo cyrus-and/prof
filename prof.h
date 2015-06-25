@@ -15,43 +15,22 @@
  * straightforward to setup as possible, so it cannot be included more than
  * once.
  *
- * See API below for the documentation.
- *
  * Minimal example
  * ---------------
  *
  * The following snippet prints the rough number of CPU clock cycles spent in
  * executing the code between the two Prof calls:
  *
- *     #include "prof.h"
+ * ```c
+ * #include "prof.h"
  *
- *     int main()
- *     {
- *         PROF_START();
- *         // slow code goes here...
- *         PROF_STDOUT();
- *     }
- *
- * --
- * Copyright (c) 2015 Andrea Cardaci <cyrus.and@gmail.com>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * int main()
+ * {
+ *     PROF_START();
+ *     // slow code goes here...
+ *     PROF_STDOUT();
+ * }
+ * ```
  */
 #ifndef PROF_H
 #define PROF_H
@@ -67,7 +46,10 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-/* API ---------------------------------------------------------------------- */
+/*
+ * API
+ * ---
+ */
 
 /*
  * Reset the counters and (re)start counting the events.
@@ -262,6 +244,29 @@ void __attribute__((destructor)) prof_fini()
     free(prof_event_buf_);
 }
 
-/* -------------------------------------------------------------------------- */
-
 #endif
+
+/*
+ * License
+ * -------
+ *
+ * Copyright (c) 2015 Andrea Cardaci <cyrus.and@gmail.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
