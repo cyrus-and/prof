@@ -209,7 +209,11 @@
 /* DEFAULTS ----------------------------------------------------------------- */
 
 #ifndef PROF_EVENT_LIST
+#ifdef PERF_COUNT_HW_REF_CPU_CYCLES /* since Linux 3.3 */
 #define PROF_EVENT_LIST PROF_EVENT_HW(REF_CPU_CYCLES)
+#else
+#define PROF_EVENT_LIST PROF_EVENT_HW(CPU_CYCLES)
+#endif
 #endif
 
 /* UTILITY ------------------------------------------------------------------ */
