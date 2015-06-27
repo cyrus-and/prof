@@ -209,8 +209,7 @@
 /* DEFAULTS ----------------------------------------------------------------- */
 
 #ifndef PROF_EVENT_LIST
-#define PROF_EVENT_LIST                                                        \
-    PROF_EVENT(PERF_TYPE_HARDWARE, PERF_COUNT_HW_REF_CPU_CYCLES)
+#define PROF_EVENT_LIST PROF_EVENT_HW(REF_CPU_CYCLES)
 #endif
 
 /* UTILITY ------------------------------------------------------------------ */
