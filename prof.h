@@ -65,6 +65,13 @@
  *     printf("Total L1 faults: R = %lu; W = %lu\n", faults[0], faults[1]);
  * }
  * ```
+ *
+ * Installation
+ * ------------
+ *
+ * Just include `prof.h`. Here is a quick way to fetch the latest version:
+ *
+ *     wget -q https://raw.githubusercontent.com/cyrus-and/prof/master/prof.h
  */
 #ifndef PROF_H
 #define PROF_H

@@ -66,6 +66,13 @@ int main()
 }
 ```
 
+Installation
+------------
+
+Just include `prof.h`. Here is a quick way to fetch the latest version:
+
+    wget -q https://raw.githubusercontent.com/cyrus-and/prof/master/prof.h
+
 API
 ---
 
