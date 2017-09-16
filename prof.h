@@ -311,7 +311,7 @@ void __attribute__((destructor)) prof_fini()
  * License
  * -------
  *
- * Copyright (c) 2015 Andrea Cardaci <cyrus.and@gmail.com>
+ * Copyright (c) 2017 Andrea Cardaci <cyrus.and@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
