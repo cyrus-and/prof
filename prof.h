@@ -1,6 +1,5 @@
 /*
- * Prof
- * ====
+ * # Prof
  *
  * Self-contained C/C++ profiler library for Linux.
  *
@@ -15,8 +14,7 @@
  * straightforward to setup as possible, so it cannot be included more than
  * once.
  *
- * Examples
- * --------
+ * ## Examples
  *
  * ### Minimal
  *
@@ -66,8 +64,7 @@
  * }
  * ```
  *
- * Installation
- * ------------
+ * ## Installation
  *
  * Just include `prof.h`. Here is a quick way to fetch the latest version:
  *
@@ -88,8 +85,7 @@
 #include <unistd.h>
 
 /*
- * API
- * ---
+ * ## API
  */
 
 /*
@@ -308,10 +304,9 @@ void __attribute__((destructor)) prof_fini()
 #endif
 
 /*
- * License
- * -------
+ * ## License
  *
- * Copyright (c) 2017 Andrea Cardaci <cyrus.and@gmail.com>
+ * Copyright (c) 2019 Andrea Cardaci <cyrus.and@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

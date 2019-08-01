@@ -1,5 +1,4 @@
-Prof
-====
+# Prof
 
 Self-contained C/C++ profiler library for Linux.
 
@@ -14,8 +13,7 @@ Please be aware that Prof uses `__attribute__((constructor))` to be as more
 straightforward to setup as possible, so it cannot be included more than
 once.
 
-Examples
---------
+## Examples
 
 ### Minimal
 
@@ -65,17 +63,15 @@ int main()
 }
 ```
 
-Installation
-------------
+## Installation
 
 Just include `prof.h`. Here is a quick way to fetch the latest version:
 
     wget -q https://raw.githubusercontent.com/cyrus-and/prof/master/prof.h
 
-API
----
+## API
 
-#### PROF_START()
+### PROF_START()
 
 Reset the counters and (re)start counting the events.
 
@@ -86,22 +82,22 @@ defaults to counting the number CPU clock cycles.
 If the `PROF_USER_EVENTS_ONLY` macro is defined before including this file
 then kernel and hypervisor events are excluded from the count.
 
-#### PROF_EVENT(type, config)
+### PROF_EVENT(type, config)
 
 Specify an event to be monitored, `type` and `config` are defined in the
 documentation of the `perf_event_open` system call.
 
-#### PROF_EVENT_HW(config)
+### PROF_EVENT_HW(config)
 
 Same as `PROF_EVENT` but for hardware events; prefix `PERF_COUNT_HW_` must be
 omitted from `config`.
 
-#### PROF_EVENT_SW(config)
+### PROF_EVENT_SW(config)
 
 Same as `PROF_EVENT` but for software events; prefix `PERF_COUNT_SW_` must be
 omitted from `config`.
 
-#### PROF_EVENT_CACHE(cache, op, result)
+### PROF_EVENT_CACHE(cache, op, result)
 
 Same as `PROF_EVENT` but for cache events; prefixes `PERF_COUNT_HW_CACHE_`,
 `PERF_COUNT_HW_CACHE_OP_` and `PERF_COUNT_HW_CACHE_RESULT_` must be omitted
@@ -109,49 +105,48 @@ from `cache`, `op` and `result`, respectively. Again `cache`, `op` and
 `result` are defined in the documentation of the `perf_event_open` system
 call.
 
-#### PROF_STOP()
+### PROF_STOP()
 
 Stop counting the events. The counter array can then be accessed with
 `PROF_COUNTERS`.
 
-#### PROF_COUNTERS
+### PROF_COUNTERS
 
 Access the counter array. The order of counters is the same of the events
 defined in `PROF_EVENT_LIST`. Elements of this array are 64 bit unsigned
 integers.
 
-#### PROF_DO(block)
+### PROF_DO(block)
 
 Stop counting the events and execute the code provided by `block` for each
 event. Within `code`: `index` refers to the event position index in the
 counter array defined by `PROF_COUNTERS`; `counter` is the actual value of
 the counter. `index` is a 64 bit unsigned integer.
 
-#### PROF_CALL(callback)
+### PROF_CALL(callback)
 
 Same as `PROF_DO` except that `callback` is the name of a *callable* object
 (e.g. a function) which, for each event, is be called with the two parameters
 `index` and `counter`.
 
-#### PROF_FILE(file)
+### PROF_FILE(file)
 
 Stop counting the events and write to `file` (a stdio.h `FILE *`) as many
 lines as are events in `PROF_EVENT_LIST`. Each line contains `index` and
 `counter` (as defined by `PROF_DO`) separated by a tabulation character. If
 there is only one event then `index` is omitted.
 
-#### PROF_STDOUT()
+### PROF_STDOUT()
 
 Same as `PROF_LOG_FILE` except that `file` is `stdout`.
 
-#### PROF_STDERR()
+### PROF_STDERR()
 
 Same as `PROF_LOG_FILE` except that `file` is `stderr`.
 
-License
--------
+## License
 
-Copyright (c) 2015 Andrea Cardaci <cyrus.and@gmail.com>
+Copyright (c) 2019 Andrea Cardaci <cyrus.and@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
