@@ -69,6 +69,24 @@ Just include `prof.h`. Here is a quick way to fetch the latest version:
 
     wget -q https://raw.githubusercontent.com/cyrus-and/prof/master/prof.h
 
+## Setup
+
+Since Prof uses `perf_event_open` make sure to have the permission to access
+the performance counters: either run the program as superuser (discouraged)
+or set the value of `perf_event_paranoid` appropriately, for example:
+
+```console
+$ echo 1 | sudo tee /proc/sys/kernel/perf_event_paranoid
+```
+
+Optionally make it permanent with:
+
+```console
+$ echo 'kernel.perf_event_paranoid=1' | sudo tee /etc/sysctl.d/local.conf
+```
+
+See `man perf_event_open` for more information.
+
 ## API
 
 ### PROF_START()
