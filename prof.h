@@ -10,10 +10,6 @@
  * the hot spot has already been identified. In no way Prof is a replacement for
  * a fully-fledged profiler like perf, gprof, callgrind, etc.
  *
- * Please be aware that Prof uses `__attribute__((constructor))` to be as more
- * straightforward to setup as possible, so it cannot be included more than
- * once.
- *
  * ## Examples
  *
  * ### Minimal
@@ -69,6 +65,25 @@
  * Just include `prof.h`. Here is a quick way to fetch the latest version:
  *
  *     wget -q https://raw.githubusercontent.com/cyrus-and/prof/master/prof.h
+ *
+ * Please be aware that Prof uses `__attribute__((constructor))` to be the more
+ * straightforward to setup as possible, so the header cannot be included more
+ * than once.
+ *
+ * This also means that in order to use Prof from additional threads, the setup
+ * code (`prof_init` and `prof_fini` calls) must be replicated for each one of
+ * them, for example:
+ *
+ * ```c
+ * void *thread(void *args) {
+ *     prof_init();
+ *
+ *     // ...
+ *
+ *     prof_fini();
+ *     return NULL;
+ * }
+ * ```
  *
  * ## Setup
  *
@@ -266,9 +281,9 @@
 
 /* SETUP -------------------------------------------------------------------- */
 
-static int prof_fd_;
-static uint64_t prof_event_cnt_;
-static uint64_t *prof_event_buf_;
+static __thread int prof_fd_;
+static __thread uint64_t prof_event_cnt_;
+static __thread uint64_t *prof_event_buf_;
 
 static void prof_init_(uint64_t dummy, ...) {
     uint32_t type;
