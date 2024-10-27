@@ -9,10 +9,6 @@ be easy to setup and painless to use for targeted optimizations, namely, when
 the hot spot has already been identified. In no way Prof is a replacement for
 a fully-fledged profiler like perf, gprof, callgrind, etc.
 
-Please be aware that Prof uses `__attribute__((constructor))` to be as more
-straightforward to setup as possible, so it cannot be included more than
-once.
-
 ## Examples
 
 ### Minimal
@@ -59,7 +55,7 @@ int main()
     // slow code goes here...
     PROF_DO(faults[index] += counter);
 
-    printf("Total L1 faults: R = %lu; W = %lu\n", faults[0], faults[1]);
+    printf("L1: R = %" PRIu64 "; W = %" PRIu64 "\faults[0], faults[1]);
 }
 ```
 
@@ -68,6 +64,25 @@ int main()
 Just include `prof.h`. Here is a quick way to fetch the latest version:
 
     wget -q https://raw.githubusercontent.com/cyrus-and/prof/master/prof.h
+
+Please be aware that Prof uses `__attribute__((constructor))` to be the more
+straightforward to setup as possible, so the header cannot be included more
+than once.
+
+This also means that in order to use Prof from additional threads, the setup
+code (`prof_init` and `prof_fini` calls) must be replicated for each one of
+them, for example:
+
+```c
+void *thread(void *args) {
+    prof_init();
+
+    // ...
+
+    prof_fini();
+    return NULL;
+}
+```
 
 ## Setup
 
@@ -164,7 +179,7 @@ Same as `PROF_LOG_FILE` except that `file` is `stderr`.
 
 ## License
 
-Copyright (c) 2020 Andrea Cardaci <cyrus.and@gmail.com>
+Copyright (c) 2024 Andrea Cardaci <cyrus.and@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
