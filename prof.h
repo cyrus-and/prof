@@ -56,7 +56,7 @@
  *     // slow code goes here...
  *     PROF_DO(faults[index] += counter);
  *
- *     printf("Total L1 faults: R = %lu; W = %lu\n", faults[0], faults[1]);
+ *     printf("L1: R = %" PRIu64 "; W = %" PRIu64 "\faults[0], faults[1]);
  * }
  * ```
  *
@@ -107,6 +107,7 @@
 #define PROF_H
 
 #include <errno.h>
+#include <inttypes.h>
 #include <linux/perf_event.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -224,9 +225,9 @@
  */
 #define PROF_FILE(file)                                                        \
     PROF_DO(if (prof_event_cnt_ > 1) {                                         \
-            fprintf((file), "%lu\t%lu\n", index, counter);                     \
+            fprintf((file), "%" PRIu64 "\t%" PRIu64 "\n", index, counter);     \
         } else {                                                               \
-            fprintf((file), "%lu\n", counter);                                 \
+            fprintf((file), "%" PRIu64 "\n", counter);                         \
         }                                                                      \
     )
 
